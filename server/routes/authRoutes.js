@@ -6,8 +6,10 @@ const User = require("../models/User");
 const authMiddleware = require("../middleware/authmiddleware");
 
 router.post("/register", async(req,res)=>{
+    try{
     const {name,email,password}=req.body;
     const existingUser=await User.findOne({email});
+
     if(existingUser){
         return res.status(400).json({
             success:false,
@@ -22,22 +24,27 @@ router.post("/register", async(req,res)=>{
     });
     res.status(201).json({
         success:true,
-        message:"User registered successfuly",
+        message:"User registered successfully",
         user:{
             id:user._id,
             name: user.name,
             email:user.email,
         }
     });
+}
+catch(error){
+    return res.status(500).json({
+        success:false,
+        message:"Server Error",
+    });
+}
 });
 router.post("/login", async (req, res) => {
+    try{
     const { email, password } = req.body;
-    console.log("Login Email:", email);
-    console.log("Login Password:", password);
-
+        
     const user = await User.findOne({ email });
-    console.log("User Found:", user);
-
+    
     if (!user) {
         return res.status(400).json({
             success: false,
@@ -45,7 +52,7 @@ router.post("/login", async (req, res) => {
         });
     }
     const isMatch = await bcrypt.compare(password,user.password);
-    console.log("Password Match:", isMatch);
+   
     if(!isMatch){
         return res.status(400).json({
             success:false,
@@ -73,6 +80,13 @@ res.status(200).json({
         email:user.email,
     },
 });
+    }
+    catch(error){
+        return res.status(500).json({
+            success:false,
+            message:"Server Error",
+        })
+    }
 });
 router.get("/profile", authMiddleware, (req, res) => {
 
