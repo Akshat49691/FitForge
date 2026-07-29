@@ -33,6 +33,7 @@ router.post("/register", async(req,res)=>{
     });
 }
 catch(error){
+     console.error(error);
     return res.status(500).json({
         success:false,
         message:"Server Error",
@@ -82,6 +83,7 @@ res.status(200).json({
 });
     }
     catch(error){
+         console.error(error);
         return res.status(500).json({
             success:false,
             message:"Server Error",

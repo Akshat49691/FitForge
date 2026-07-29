@@ -20,6 +20,7 @@ router.get("/profile", authMiddleware, async (req, res) => {
         });
 
     } catch (error) {
+         console.error(error);
         return res.status(500).json({
             success: false,
             message: "Server Error",
@@ -46,6 +47,7 @@ router.put("/profile", authMiddleware, async (req, res)=>{
         });
 
     }catch(error){
+         console.error(error);
         return res.status(500).json({
             success:false,
             message:"Server Error",
