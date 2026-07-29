@@ -18,10 +18,40 @@ const createExercise = async (req, res) => {
   }
 };
 
-// Get All Exercises
+// Get All Exercises with Search  and Filters
 const getAllExercises = async (req, res) => {
-  try {
-    const exercises = await Exercise.find();
+   try {
+    const { search, category, muscleGroup, difficulty, equipment } = req.query;
+
+    // Create filter object
+    const filter = {};
+
+    // Search by exercise name
+    if (search) {
+      filter.name = { $regex: search, $options: "i" };
+    }
+
+    // Filter by category
+    if (category) {
+      filter.category = category;
+    }
+
+    // Filter by muscle group
+    if (muscleGroup) {
+      filter.muscleGroup = muscleGroup;
+    }
+
+    // Filter by difficulty
+    if (difficulty) {
+      filter.difficulty = difficulty;
+    }
+
+    // Filter by equipment
+    if (equipment) {
+      filter.equipment = equipment;
+    }
+
+    const exercises = await Exercise.find(filter);
 
     res.status(200).json({
       success: true,
